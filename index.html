@@ -453,18 +453,18 @@
     <!-- NAVIGATION HEADER -->
     <header class="sticky top-0 z-50 backdrop-blur-md bg-white/90 dark:bg-slate-900/90 border-b border-slate-100 dark:border-slate-800/80 transition-colors duration-300">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex items-center justify-between h-20">
+            <div class="flex items-center justify-between h-20 gap-4">
                 <!-- Logo / Name -->
                 <div class="flex-shrink-0 flex flex-col">
-                    <a href="#hero" class="text-xl font-bold tracking-tight text-primary-700 dark:text-primary-400 font-serif flex items-center gap-2">
+                    <a href="#hero" class="text-lg sm:text-xl font-bold tracking-tight text-primary-700 dark:text-primary-400 font-serif flex items-center gap-2">
                         <i class="fa-solid fa-graduation-cap"></i>
                         <span>BOUAFIA REHABI</span>
                     </a>
-                    <span class="text-xs text-slate-500 dark:text-slate-400 font-medium tracking-widest uppercase" data-i18n="nav.subtitle">Consultant IT & Formateur</span>
+                    <span class="text-[10px] sm:text-xs text-slate-500 dark:text-slate-400 font-medium tracking-widest uppercase" data-i18n="nav.subtitle">Consultant IT & Formateur</span>
                 </div>
 
                 <!-- Desktop Nav Links -->
-                <nav class="hidden md:flex items-center space-x-8 text-sm font-medium">
+                <nav class="hidden lg:flex items-center gap-5 xl:gap-7 text-xs xl:text-sm font-medium whitespace-nowrap">
                     <a href="#about" class="text-slate-600 dark:text-slate-300 hover:text-primary-600 dark:hover:text-primary-400 transition-colors" data-i18n="nav.profil">Profil</a>
                     <a href="#skills" class="text-slate-600 dark:text-slate-300 hover:text-primary-600 dark:hover:text-primary-400 transition-colors" data-i18n="nav.competences">Compétences</a>
                     <a href="#experiences" class="text-slate-600 dark:text-slate-300 hover:text-primary-600 dark:hover:text-primary-400 transition-colors" data-i18n="nav.formations">Formations Dispensées</a>
@@ -473,15 +473,15 @@
                     <a href="#contact" class="text-slate-600 dark:text-slate-300 hover:text-primary-600 dark:hover:text-primary-400 transition-colors" data-i18n="nav.contact">Contact</a>
                 </nav>
 
-                <!-- Actions & Toggle Theme -->
-                <div class="hidden md:flex items-center space-x-3">
+                <!-- Actions: Language Switcher, Dark Mode & Download CV -->
+                <div class="hidden md:flex items-center gap-2.5 xl:gap-3 flex-shrink-0">
                     <!-- Language Selector Pill -->
                     <div class="relative" @click.outside="langOpen = false">
                         <button @click="langOpen = !langOpen" 
-                                class="flex items-center gap-2 px-3 py-1.5 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-200 hover:bg-slate-200 dark:hover:bg-slate-700 font-semibold text-xs border border-slate-200 dark:border-slate-700/80 transition-all shadow-xs"
+                                class="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-200 hover:bg-slate-200 dark:hover:bg-slate-700 font-semibold text-xs border border-slate-200 dark:border-slate-700/80 transition-all shadow-xs"
                                 aria-label="Choisir la langue">
                             <span class="text-base leading-none" x-text="lang === 'ar' ? '🇸🇦' : lang === 'en' ? '🇬🇧' : '🇫🇷'"></span>
-                            <span class="uppercase tracking-wider text-[11px]" x-text="lang === 'ar' ? 'العربية' : lang === 'en' ? 'EN' : 'FR'"></span>
+                            <span class="uppercase tracking-wider text-[11px] font-bold" x-text="lang === 'ar' ? 'العربية' : lang === 'en' ? 'EN' : 'FR'"></span>
                             <i class="fa-solid fa-chevron-down text-[9px] text-slate-400 transition-transform duration-200" :class="langOpen ? 'rotate-180' : ''"></i>
                         </button>
                         
@@ -493,23 +493,24 @@
                              x-transition:leave="transition ease-in duration-100"
                              x-transition:leave-start="opacity-100 scale-100 translate-y-0"
                              x-transition:leave-end="opacity-0 scale-95 -translate-y-1"
-                             class="absolute right-0 mt-2 w-36 bg-white dark:bg-slate-800 rounded-xl shadow-xl border border-slate-100 dark:border-slate-700 py-1.5 z-[100] text-xs font-semibold">
-                            <button @click="switchLang('fr')" class="w-full flex items-center gap-2.5 px-3 py-2 text-left hover:bg-slate-50 dark:hover:bg-slate-700/60 transition-colors" :class="lang === 'fr' ? 'text-primary-600 dark:text-primary-400 font-bold bg-primary-50/50 dark:bg-primary-950/30' : 'text-slate-700 dark:text-slate-300'">
+                             class="absolute right-0 ltr:right-0 rtl:left-0 mt-2 w-36 bg-white dark:bg-slate-800 rounded-xl shadow-xl border border-slate-100 dark:border-slate-700 py-1.5 z-[100] text-xs font-semibold">
+                            <button @click="switchLang('fr')" class="w-full flex items-center gap-2.5 px-3 py-2 text-left rtl:text-right hover:bg-slate-50 dark:hover:bg-slate-700/60 transition-colors" :class="lang === 'fr' ? 'text-primary-600 dark:text-primary-400 font-bold bg-primary-50/50 dark:bg-primary-950/30' : 'text-slate-700 dark:text-slate-300'">
                                 <span class="text-base leading-none">🇫🇷</span>
                                 <span>Français</span>
                             </button>
-                            <button @click="switchLang('ar')" class="w-full flex items-center gap-2.5 px-3 py-2 text-left hover:bg-slate-50 dark:hover:bg-slate-700/60 transition-colors" :class="lang === 'ar' ? 'text-primary-600 dark:text-primary-400 font-bold bg-primary-50/50 dark:bg-primary-950/30' : 'text-slate-700 dark:text-slate-300'">
+                            <button @click="switchLang('ar')" class="w-full flex items-center gap-2.5 px-3 py-2 text-left rtl:text-right hover:bg-slate-50 dark:hover:bg-slate-700/60 transition-colors" :class="lang === 'ar' ? 'text-primary-600 dark:text-primary-400 font-bold bg-primary-50/50 dark:bg-primary-950/30' : 'text-slate-700 dark:text-slate-300'">
                                 <span class="text-base leading-none">🇸🇦</span>
                                 <span>العربية</span>
                             </button>
-                            <button @click="switchLang('en')" class="w-full flex items-center gap-2.5 px-3 py-2 text-left hover:bg-slate-50 dark:hover:bg-slate-700/60 transition-colors" :class="lang === 'en' ? 'text-primary-600 dark:text-primary-400 font-bold bg-primary-50/50 dark:bg-primary-950/30' : 'text-slate-700 dark:text-slate-300'">
+                            <button @click="switchLang('en')" class="w-full flex items-center gap-2.5 px-3 py-2 text-left rtl:text-right hover:bg-slate-50 dark:hover:bg-slate-700/60 transition-colors" :class="lang === 'en' ? 'text-primary-600 dark:text-primary-400 font-bold bg-primary-50/50 dark:bg-primary-950/30' : 'text-slate-700 dark:text-slate-300'">
                                 <span class="text-base leading-none">🇬🇧</span>
                                 <span>English</span>
                             </button>
                         </div>
                     </div>
 
-                    <button @click="toggleTheme()" class="p-2.5 rounded-full text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 focus:outline-none transition-colors" aria-label="Toggle Theme">
+                    <!-- Theme Toggle -->
+                    <button @click="toggleTheme()" class="p-2 rounded-full text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 focus:outline-none transition-colors" aria-label="Toggle Theme">
                         <template x-if="darkMode">
                             <i class="fa-solid fa-sun text-lg text-amber-500"></i>
                         </template>
@@ -517,14 +518,16 @@
                             <i class="fa-solid fa-moon text-lg text-slate-700"></i>
                         </template>
                     </button>
-                    <a href="assets/cv_bouafia-MAJ.pdf" download class="inline-flex items-center gap-2 px-5 py-2.5 bg-primary-600 hover:bg-primary-700 dark:bg-primary-500 dark:hover:bg-primary-600 text-white rounded-full text-sm font-semibold shadow-md shadow-primary-500/20 hover:shadow-lg hover:shadow-primary-500/30 transition-all duration-300 transform hover:-translate-y-0.5">
+
+                    <!-- Download CV Button -->
+                    <a href="assets/cv_bouafia-MAJ.pdf" download class="inline-flex items-center gap-2 px-4 py-2 bg-primary-600 hover:bg-primary-700 dark:bg-primary-500 dark:hover:bg-primary-600 text-white rounded-full text-xs font-semibold shadow-md shadow-primary-500/20 hover:shadow-lg transition-all duration-300 transform hover:-translate-y-0.5 whitespace-nowrap">
                         <i class="fa-solid fa-download"></i>
                         <span data-i18n="nav.download_cv">Télécharger CV (PDF)</span>
                     </a>
                 </div>
 
-                <!-- Mobile Menu Button -->
-                <div class="flex items-center md:hidden gap-2">
+                <!-- Mobile Controls Button (Theme & Hamburger) -->
+                <div class="flex items-center lg:hidden gap-2">
                     <button @click="toggleTheme()" class="p-2 rounded-full text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">
                         <template x-if="darkMode">
                             <i class="fa-solid fa-sun text-md text-amber-500"></i>
@@ -648,7 +651,7 @@
                             
                             <div>
                                 <h3 class="text-2xl font-bold font-serif text-slate-900 dark:text-white">Bouafia Rehabi</h3>
-                                <p class="text-sm font-medium text-primary-600 dark:text-primary-400 mt-1" data-i18n="card.title">Directeur & Consultant International</p>
+                                <p class="text-sm font-medium text-primary-600 dark:text-primary-400 mt-1" data-i18n="card.title">  Formateur IT & Consultant Informatique</p>
                                 <p class="text-xs text-slate-500 dark:text-slate-400 mt-0.5" data-i18n="card.years">30+ Ans d'Impact Technologique</p>
                             </div>
 
