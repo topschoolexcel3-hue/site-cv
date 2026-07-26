@@ -51,7 +51,11 @@ const TRANSLATIONS = {
   'hero.cta_attest': { fr: 'Voir mes attestations', ar: 'عرض الشهادات', en: 'View my certificates' },
 
   // ─── HERO CARD ────────────────────────────────────
-  'card.title': { fr: 'Directeur & Consultant International', ar: 'مدير ومستشار دولي', en: 'Director & International Consultant' },
+  'card.title': {
+    fr: 'Formateur IT & Consultant Informatique',
+    ar: 'مدرّب تكنولوجيا المعلومات ومستشار معلوماتية',
+    en: 'IT Trainer & IT Consultant'
+  },
   'card.years': { fr: '30+ Ans d\'Impact Technologique', ar: '30+ سنة من التأثير التكنولوجي', en: '30+ Years of Technological Impact' },
   'card.univ_label': { fr: 'Université :', ar: 'الجامعة:', en: 'University:' },
   'card.univ_val': { fr: 'Alger 2 (Enseignant)', ar: 'الجزائر 2 (أستاذ)', en: 'Algiers 2 (Lecturer)' },
