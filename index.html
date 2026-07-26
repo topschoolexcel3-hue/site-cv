@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="fr" class="scroll-smooth" x-data="{ darkMode: localStorage.getItem('darkMode') === 'true' }" :class="{ 'dark': darkMode }">
+<html lang="fr" class="scroll-smooth" x-data="{ darkMode: localStorage.getItem('darkMode') === 'true' }" :class="{ 'dark': darkMode }" :dir="'ltr'">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -59,6 +59,10 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
     <!-- FontAwesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts: Arabic support -->
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Kufi+Arabic:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- Translations Engine -->
+    <script src="translations.js"></script>
     <!-- Alpine.js CDN -->
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
     <style>
@@ -226,6 +230,101 @@
         @media (prefers-reduced-motion: reduce) {
             .whatsapp-icon-wrap::before { animation: none; }
         }
+
+        /* ============================
+           RTL (Arabic) SUPPORT
+        ============================ */
+        [dir="rtl"] {
+            font-family: 'Noto Kufi Arabic', 'Inter', sans-serif;
+        }
+        [dir="rtl"] .font-serif {
+            font-family: 'Noto Kufi Arabic', 'Playfair Display', serif;
+        }
+        [dir="rtl"] .space-x-8 > :not([hidden]) ~ :not([hidden]) {
+            --tw-space-x-reverse: 1;
+        }
+        [dir="rtl"] .text-left { text-align: right; }
+        [dir="rtl"] .lg\:text-left { text-align: right; }
+        [dir="rtl"] .ml-6 { margin-left: 0; margin-right: 1.5rem; }
+        [dir="rtl"] .ml-4 { margin-left: 0; margin-right: 1rem; }
+        [dir="rtl"] .mr-1, [dir="rtl"] .mr-1\.5, [dir="rtl"] .mr-2 {
+            margin-right: 0 !important;
+            margin-left: 0.5rem;
+        }
+        [dir="rtl"] .pl-11 { padding-left: 1rem; padding-right: 2.75rem; }
+        [dir="rtl"] .border-l-2 { border-left: 0; border-right: 2px solid; }
+        [dir="rtl"] .border-l-4 { border-left: 0; border-right: 4px solid; }
+        [dir="rtl"] .-left-1\.5 { left: auto; right: -0.375rem; }
+        [dir="rtl"] .-left-32 { left: auto; right: -8rem; }
+        [dir="rtl"] .md\:ml-32 { margin-left: 0; margin-right: 8rem; }
+        [dir="rtl"] .whatsapp-btn { right: auto; left: 28px; }
+        [dir="rtl"] .whatsapp-label { transform: translateX(-10px); }
+        [dir="rtl"] .whatsapp-btn:hover .whatsapp-label { transform: translateX(0); }
+
+        /* Language Switcher */
+        .lang-switcher {
+            position: relative;
+        }
+        .lang-dropdown {
+            position: absolute;
+            top: 100%;
+            right: 0;
+            margin-top: 8px;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.12);
+            border: 1px solid #e2e8f0;
+            overflow: hidden;
+            min-width: 160px;
+            z-index: 100;
+            opacity: 0;
+            transform: translateY(-8px) scale(0.95);
+            pointer-events: none;
+            transition: opacity 0.2s ease, transform 0.2s ease;
+        }
+        .lang-switcher:hover .lang-dropdown,
+        .lang-switcher:focus-within .lang-dropdown {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+            pointer-events: auto;
+        }
+        .dark .lang-dropdown {
+            background: #1e293b;
+            border-color: #334155;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.4);
+        }
+        .lang-option {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 16px;
+            font-size: 13px;
+            font-weight: 600;
+            color: #475569;
+            cursor: pointer;
+            transition: background 0.15s;
+        }
+        .lang-option:hover {
+            background: #f1f5f9;
+        }
+        .dark .lang-option {
+            color: #cbd5e1;
+        }
+        .dark .lang-option:hover {
+            background: #334155;
+        }
+        .lang-option.active {
+            background: #eff6ff;
+            color: #0284c7;
+        }
+        .dark .lang-option.active {
+            background: #0c4a6e33;
+            color: #38bdf8;
+        }
+        .lang-flag {
+            font-size: 20px;
+            line-height: 1;
+        }
     </style>
 </head>
 <body class="bg-slate-50 dark:bg-slate-900 text-slate-800 dark:text-slate-100 font-sans transition-colors duration-300 antialiased"
@@ -234,6 +333,9 @@
          activeTab: 'all',
          searchQuery: '',
          attestModal: false,
+         lang: localStorage.getItem('siteLang') || 'fr',
+         langOpen: false,
+         switchLang(l) { this.lang = l; this.langOpen = false; localStorage.setItem('siteLang', l); applyTranslations(l); document.documentElement.dir = l === 'ar' ? 'rtl' : 'ltr'; },
          experiences: [
             { date: 'Juin 2026', etablissement: 'CACI', module: 'PROTECTION DES DONNEES PERSONNELS Loi 18-07', client: 'CACI', category: 'security', target: 'Cadres Dirigeants Ingénieur' },
             { date: 'Juin 2026', etablissement: 'El-bayane', module: 'ASP .NET COR', client: 'OPGI', category: 'dev', target: 'Cadres Dirigeants Ingénieur' },
@@ -358,21 +460,55 @@
                         <i class="fa-solid fa-graduation-cap"></i>
                         <span>BOUAFIA REHABI</span>
                     </a>
-                    <span class="text-xs text-slate-500 dark:text-slate-400 font-medium tracking-widest uppercase">Consultant IT & Formateur</span>
+                    <span class="text-xs text-slate-500 dark:text-slate-400 font-medium tracking-widest uppercase" data-i18n="nav.subtitle">Consultant IT & Formateur</span>
                 </div>
 
                 <!-- Desktop Nav Links -->
                 <nav class="hidden md:flex items-center space-x-8 text-sm font-medium">
-                    <a href="#about" class="text-slate-600 dark:text-slate-300 hover:text-primary-600 dark:hover:text-primary-400 transition-colors">Profil</a>
-                    <a href="#skills" class="text-slate-600 dark:text-slate-300 hover:text-primary-600 dark:hover:text-primary-400 transition-colors">Compétences</a>
-                    <a href="#experiences" class="text-slate-600 dark:text-slate-300 hover:text-primary-600 dark:hover:text-primary-400 transition-colors">Formations Dispensées</a>
-                    <a href="#education" class="text-slate-600 dark:text-slate-300 hover:text-primary-600 dark:hover:text-primary-400 transition-colors">Parcours</a>
-                    <a href="#clients" class="text-slate-600 dark:text-slate-300 hover:text-primary-600 dark:hover:text-primary-400 transition-colors">Clients</a>
-                    <a href="#contact" class="text-slate-600 dark:text-slate-300 hover:text-primary-600 dark:hover:text-primary-400 transition-colors">Contact</a>
+                    <a href="#about" class="text-slate-600 dark:text-slate-300 hover:text-primary-600 dark:hover:text-primary-400 transition-colors" data-i18n="nav.profil">Profil</a>
+                    <a href="#skills" class="text-slate-600 dark:text-slate-300 hover:text-primary-600 dark:hover:text-primary-400 transition-colors" data-i18n="nav.competences">Compétences</a>
+                    <a href="#experiences" class="text-slate-600 dark:text-slate-300 hover:text-primary-600 dark:hover:text-primary-400 transition-colors" data-i18n="nav.formations">Formations Dispensées</a>
+                    <a href="#education" class="text-slate-600 dark:text-slate-300 hover:text-primary-600 dark:hover:text-primary-400 transition-colors" data-i18n="nav.parcours">Parcours</a>
+                    <a href="#clients" class="text-slate-600 dark:text-slate-300 hover:text-primary-600 dark:hover:text-primary-400 transition-colors" data-i18n="nav.clients">Clients</a>
+                    <a href="#contact" class="text-slate-600 dark:text-slate-300 hover:text-primary-600 dark:hover:text-primary-400 transition-colors" data-i18n="nav.contact">Contact</a>
                 </nav>
 
                 <!-- Actions & Toggle Theme -->
-                <div class="hidden md:flex items-center space-x-4">
+                <div class="hidden md:flex items-center space-x-3">
+                    <!-- Language Selector Pill -->
+                    <div class="relative" @click.outside="langOpen = false">
+                        <button @click="langOpen = !langOpen" 
+                                class="flex items-center gap-2 px-3 py-1.5 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-200 hover:bg-slate-200 dark:hover:bg-slate-700 font-semibold text-xs border border-slate-200 dark:border-slate-700/80 transition-all shadow-xs"
+                                aria-label="Choisir la langue">
+                            <span class="text-base leading-none" x-text="lang === 'ar' ? '🇸🇦' : lang === 'en' ? '🇬🇧' : '🇫🇷'"></span>
+                            <span class="uppercase tracking-wider text-[11px]" x-text="lang === 'ar' ? 'العربية' : lang === 'en' ? 'EN' : 'FR'"></span>
+                            <i class="fa-solid fa-chevron-down text-[9px] text-slate-400 transition-transform duration-200" :class="langOpen ? 'rotate-180' : ''"></i>
+                        </button>
+                        
+                        <!-- Dropdown Menu -->
+                        <div x-show="langOpen" x-cloak
+                             x-transition:enter="transition ease-out duration-150"
+                             x-transition:enter-start="opacity-0 scale-95 -translate-y-1"
+                             x-transition:enter-end="opacity-100 scale-100 translate-y-0"
+                             x-transition:leave="transition ease-in duration-100"
+                             x-transition:leave-start="opacity-100 scale-100 translate-y-0"
+                             x-transition:leave-end="opacity-0 scale-95 -translate-y-1"
+                             class="absolute right-0 mt-2 w-36 bg-white dark:bg-slate-800 rounded-xl shadow-xl border border-slate-100 dark:border-slate-700 py-1.5 z-[100] text-xs font-semibold">
+                            <button @click="switchLang('fr')" class="w-full flex items-center gap-2.5 px-3 py-2 text-left hover:bg-slate-50 dark:hover:bg-slate-700/60 transition-colors" :class="lang === 'fr' ? 'text-primary-600 dark:text-primary-400 font-bold bg-primary-50/50 dark:bg-primary-950/30' : 'text-slate-700 dark:text-slate-300'">
+                                <span class="text-base leading-none">🇫🇷</span>
+                                <span>Français</span>
+                            </button>
+                            <button @click="switchLang('ar')" class="w-full flex items-center gap-2.5 px-3 py-2 text-left hover:bg-slate-50 dark:hover:bg-slate-700/60 transition-colors" :class="lang === 'ar' ? 'text-primary-600 dark:text-primary-400 font-bold bg-primary-50/50 dark:bg-primary-950/30' : 'text-slate-700 dark:text-slate-300'">
+                                <span class="text-base leading-none">🇸🇦</span>
+                                <span>العربية</span>
+                            </button>
+                            <button @click="switchLang('en')" class="w-full flex items-center gap-2.5 px-3 py-2 text-left hover:bg-slate-50 dark:hover:bg-slate-700/60 transition-colors" :class="lang === 'en' ? 'text-primary-600 dark:text-primary-400 font-bold bg-primary-50/50 dark:bg-primary-950/30' : 'text-slate-700 dark:text-slate-300'">
+                                <span class="text-base leading-none">🇬🇧</span>
+                                <span>English</span>
+                            </button>
+                        </div>
+                    </div>
+
                     <button @click="toggleTheme()" class="p-2.5 rounded-full text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 focus:outline-none transition-colors" aria-label="Toggle Theme">
                         <template x-if="darkMode">
                             <i class="fa-solid fa-sun text-lg text-amber-500"></i>
@@ -383,12 +519,12 @@
                     </button>
                     <a href="assets/cv_bouafia-MAJ.pdf" download class="inline-flex items-center gap-2 px-5 py-2.5 bg-primary-600 hover:bg-primary-700 dark:bg-primary-500 dark:hover:bg-primary-600 text-white rounded-full text-sm font-semibold shadow-md shadow-primary-500/20 hover:shadow-lg hover:shadow-primary-500/30 transition-all duration-300 transform hover:-translate-y-0.5">
                         <i class="fa-solid fa-download"></i>
-                        <span>Télécharger CV (PDF)</span>
+                        <span data-i18n="nav.download_cv">Télécharger CV (PDF)</span>
                     </a>
                 </div>
 
                 <!-- Mobile Menu Button -->
-                <div class="flex items-center md:hidden gap-3">
+                <div class="flex items-center md:hidden gap-2">
                     <button @click="toggleTheme()" class="p-2 rounded-full text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">
                         <template x-if="darkMode">
                             <i class="fa-solid fa-sun text-md text-amber-500"></i>
@@ -406,16 +542,33 @@
 
         <!-- Mobile Navigation Menu -->
         <div x-show="mobileMenu" x-cloak x-transition:enter="transition ease-out duration-200" x-transition:enter-start="opacity-0 -translate-y-4" x-transition:enter-end="opacity-100 translate-y-0" x-transition:leave="transition ease-in duration-150" x-transition:leave-start="opacity-100 translate-y-0" x-transition:leave-end="opacity-0 -translate-y-4" class="md:hidden border-b border-slate-100 dark:border-slate-800 bg-white dark:bg-slate-900 px-4 py-4 space-y-3">
-            <a href="#about" @click="mobileMenu = false" class="block px-4 py-2 text-slate-700 dark:text-slate-200 hover:bg-primary-50 dark:hover:bg-slate-800 rounded-lg text-base font-medium">Profil</a>
-            <a href="#skills" @click="mobileMenu = false" class="block px-4 py-2 text-slate-700 dark:text-slate-200 hover:bg-primary-50 dark:hover:bg-slate-800 rounded-lg text-base font-medium">Compétences</a>
-            <a href="#experiences" @click="mobileMenu = false" class="block px-4 py-2 text-slate-700 dark:text-slate-200 hover:bg-primary-50 dark:hover:bg-slate-800 rounded-lg text-base font-medium">Formations Dispensées</a>
-            <a href="#education" @click="mobileMenu = false" class="block px-4 py-2 text-slate-700 dark:text-slate-200 hover:bg-primary-50 dark:hover:bg-slate-800 rounded-lg text-base font-medium">Parcours</a>
-            <a href="#clients" @click="mobileMenu = false" class="block px-4 py-2 text-slate-700 dark:text-slate-200 hover:bg-primary-50 dark:hover:bg-slate-800 rounded-lg text-base font-medium">Clients</a>
-            <a href="#contact" @click="mobileMenu = false" class="block px-4 py-2 text-slate-700 dark:text-slate-200 hover:bg-primary-50 dark:hover:bg-slate-800 rounded-lg text-base font-medium">Contact</a>
+            
+            <!-- Mobile Language Switcher Row -->
+            <div class="flex items-center justify-between px-4 py-2 bg-slate-50 dark:bg-slate-800/60 rounded-xl mb-3">
+                <span class="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Langue / Language:</span>
+                <div class="flex items-center gap-1.5">
+                    <button @click="switchLang('fr')" class="px-2.5 py-1 rounded-lg text-xs font-bold transition-colors flex items-center gap-1" :class="lang === 'fr' ? 'bg-primary-600 text-white shadow-xs' : 'text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700'">
+                        <span>🇫🇷</span> FR
+                    </button>
+                    <button @click="switchLang('ar')" class="px-2.5 py-1 rounded-lg text-xs font-bold transition-colors flex items-center gap-1" :class="lang === 'ar' ? 'bg-primary-600 text-white shadow-xs' : 'text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700'">
+                        <span>🇸🇦</span> AR
+                    </button>
+                    <button @click="switchLang('en')" class="px-2.5 py-1 rounded-lg text-xs font-bold transition-colors flex items-center gap-1" :class="lang === 'en' ? 'bg-primary-600 text-white shadow-xs' : 'text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700'">
+                        <span>🇬🇧</span> EN
+                    </button>
+                </div>
+            </div>
+
+            <a href="#about" @click="mobileMenu = false" class="block px-4 py-2 text-slate-700 dark:text-slate-200 hover:bg-primary-50 dark:hover:bg-slate-800 rounded-lg text-base font-medium" data-i18n="nav.profil">Profil</a>
+            <a href="#skills" @click="mobileMenu = false" class="block px-4 py-2 text-slate-700 dark:text-slate-200 hover:bg-primary-50 dark:hover:bg-slate-800 rounded-lg text-base font-medium" data-i18n="nav.competences">Compétences</a>
+            <a href="#experiences" @click="mobileMenu = false" class="block px-4 py-2 text-slate-700 dark:text-slate-200 hover:bg-primary-50 dark:hover:bg-slate-800 rounded-lg text-base font-medium" data-i18n="nav.formations">Formations Dispensées</a>
+            <a href="#education" @click="mobileMenu = false" class="block px-4 py-2 text-slate-700 dark:text-slate-200 hover:bg-primary-50 dark:hover:bg-slate-800 rounded-lg text-base font-medium" data-i18n="nav.parcours">Parcours</a>
+            <a href="#clients" @click="mobileMenu = false" class="block px-4 py-2 text-slate-700 dark:text-slate-200 hover:bg-primary-50 dark:hover:bg-slate-800 rounded-lg text-base font-medium" data-i18n="nav.clients">Clients</a>
+            <a href="#contact" @click="mobileMenu = false" class="block px-4 py-2 text-slate-700 dark:text-slate-200 hover:bg-primary-50 dark:hover:bg-slate-800 rounded-lg text-base font-medium" data-i18n="nav.contact">Contact</a>
             <div class="pt-4 border-t border-slate-100 dark:border-slate-800">
                 <a href="assets/cv_bouafia-MAJ.pdf" download class="flex items-center justify-center gap-2 w-full px-5 py-3 bg-primary-600 hover:bg-primary-700 dark:bg-primary-500 text-white rounded-lg text-sm font-semibold shadow-md">
                     <i class="fa-solid fa-download"></i>
-                    <span>Télécharger CV (PDF)</span>
+                    <span data-i18n="nav.download_cv">Télécharger CV (PDF)</span>
                 </a>
             </div>
         </div>
@@ -434,19 +587,19 @@
                 <div class="lg:col-span-7 space-y-8 text-center lg:text-left">
                     <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-emerald-500/10 dark:bg-emerald-500/20 text-emerald-600 dark:text-emerald-400 text-xs font-semibold uppercase tracking-wider animate-pulse">
                         <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
-                        Disponible pour Formations & Missions de Consulting
+                        <span data-i18n="hero.available">Disponible pour Formations & Missions de Consulting</span>
                     </div>
 
                     <div class="space-y-4">
                         <h1 class="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight font-serif leading-tight">
                             <span class="block text-slate-900 dark:text-white">BOUAFIA REHABI</span>
-                            <span class="block bg-clip-text text-transparent bg-gradient-to-r from-primary-600 to-cyan-500 dark:from-primary-400 dark:to-cyan-400 mt-2">
+                            <span class="block bg-clip-text text-transparent bg-gradient-to-r from-primary-600 to-cyan-500 dark:from-primary-400 dark:to-cyan-400 mt-2" data-i18n="hero.title_sub">
                                 Formateur IT & Consultant Informatique
                             </span>
                         </h1>
                         <p class="text-lg sm:text-xl text-slate-600 dark:text-slate-300 font-normal leading-relaxed max-w-2xl mx-auto lg:mx-0">
-                            Enseignant à l'Université d'Alger 2 • Consultant Auto-EntrePreneur<br>
-                            Spécialisé dans la formation de cadres dirigeants, la Data Analysis (Excel, Python, SQL, Power BI), la cybersécurité, le web et l'intelligence artificielle.
+                            <span data-i18n="hero.desc">Enseignant à l'Université d'Alger 2 • Consultant Auto-EntrePreneur</span><br>
+                            <span data-i18n="hero.specialization">Spécialisé dans la formation de cadres dirigeants, la Data Analysis (Excel, Python, SQL, Power BI), la cybersécurité, le web et l'intelligence artificielle.</span>
                         </p>
                     </div>
 
@@ -454,7 +607,7 @@
                     <div class="flex flex-wrap justify-center lg:justify-start gap-4 text-sm text-slate-600 dark:text-slate-400 font-medium">
                         <div class="flex items-center gap-2 bg-white dark:bg-slate-800 px-4 py-2 rounded-full shadow-sm border border-slate-100 dark:border-slate-800">
                             <i class="fa-solid fa-location-dot text-primary-500"></i>
-                            <span>Boumerdes, Algérie</span>
+                            <span data-i18n="hero.location">Boumerdes, Algérie</span>
                         </div>
                         <div class="flex items-center gap-2 bg-white dark:bg-slate-800 px-4 py-2 rounded-full shadow-sm border border-slate-100 dark:border-slate-800">
                             <i class="fa-solid fa-envelope text-primary-500"></i>
@@ -468,16 +621,16 @@
 
                     <!-- CTA Buttons -->
                     <div class="flex flex-col sm:flex-row flex-wrap items-center justify-center lg:justify-start gap-3.5 pt-2">
-                        <a href="#contact" class="w-full sm:w-auto text-center px-6 py-3.5 bg-primary-600 hover:bg-primary-700 dark:bg-primary-500 dark:hover:bg-primary-600 text-white rounded-xl text-sm font-semibold shadow-lg shadow-primary-500/20 hover:shadow-xl hover:shadow-primary-500/30 transition-all duration-300 transform hover:-translate-y-0.5">
+                        <a href="#contact" class="w-full sm:w-auto text-center px-6 py-3.5 bg-primary-600 hover:bg-primary-700 dark:bg-primary-500 dark:hover:bg-primary-600 text-white rounded-xl text-sm font-semibold shadow-lg shadow-primary-500/20 hover:shadow-xl hover:shadow-primary-500/30 transition-all duration-300 transform hover:-translate-y-0.5" data-i18n="hero.cta_plan">
                             Planifier une Formation / Mission
                         </a>
                         <a href="#experiences" class="w-full sm:w-auto text-center px-6 py-3.5 bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700 text-slate-800 dark:text-slate-200 rounded-xl text-sm font-semibold border border-slate-200 dark:border-slate-700 shadow-sm transition-all duration-300 transform hover:-translate-y-0.5">
                             <i class="fa-solid fa-list-check mr-2 text-primary-500"></i>
-                            Voir mon catalogue
+                            <span data-i18n="hero.cta_catalog">Voir mon catalogue</span>
                         </a>
                         <button @click="attestModal = true" class="w-full sm:w-auto text-center px-6 py-3.5 bg-emerald-600 hover:bg-emerald-700 dark:bg-emerald-500 dark:hover:bg-emerald-600 text-white rounded-xl text-sm font-semibold shadow-lg shadow-emerald-500/20 hover:shadow-xl hover:shadow-emerald-500/30 transition-all duration-300 transform hover:-translate-y-0.5">
                             <i class="fa-solid fa-certificate mr-2"></i>
-                            Voir mes attestations
+                            <span data-i18n="hero.cta_attest">Voir mes attestations</span>
                         </button>
                     </div>
                 </div>
@@ -495,8 +648,8 @@
                             
                             <div>
                                 <h3 class="text-2xl font-bold font-serif text-slate-900 dark:text-white">Bouafia Rehabi</h3>
-                                <p class="text-sm font-medium text-primary-600 dark:text-primary-400 mt-1">Directeur & Consultant International</p>
-                                <p class="text-xs text-slate-500 dark:text-slate-400 mt-0.5">30+ Ans d'Impact Technologique</p>
+                                <p class="text-sm font-medium text-primary-600 dark:text-primary-400 mt-1" data-i18n="card.title">Directeur & Consultant International</p>
+                                <p class="text-xs text-slate-500 dark:text-slate-400 mt-0.5" data-i18n="card.years">30+ Ans d'Impact Technologique</p>
                             </div>
 
                             <hr class="w-full border-slate-100 dark:border-slate-700">
@@ -504,20 +657,20 @@
                             <!-- Details list -->
                             <div class="w-full space-y-3.5 text-left text-sm">
                                 <div class="flex items-center justify-between text-slate-600 dark:text-slate-400">
-                                    <span class="font-medium">Université :</span>
-                                    <span class="font-semibold text-slate-900 dark:text-white">Alger 2 (Enseignant)</span>
+                                    <span class="font-medium" data-i18n="card.univ_label">Université :</span>
+                                    <span class="font-semibold text-slate-900 dark:text-white" data-i18n="card.univ_val">Alger 2 (Enseignant)</span>
                                 </div>
                                 <div class="flex items-center justify-between text-slate-600 dark:text-slate-400">
-                                    <span class="font-medium">Diplômes :</span>
-                                    <span class="font-semibold text-slate-900 dark:text-white">European Bachelor · Ingénieur PRO (Limoges, FR)</span>
+                                    <span class="font-medium" data-i18n="card.diplomas_label">Diplômes :   </span>
+                                    <span class="font-semibold text-slate-900 dark:text-white" data-i18n="card.diplomas_val">European Bachelor · Ingénieur PRO (Limoges, FR)</span>
                                 </div>
                                 <div class="flex items-center justify-between text-slate-600 dark:text-slate-400">
-                                    <span class="font-medium">Expertise Légale :</span>
-                                    <span class="font-semibold text-emerald-600 dark:text-emerald-400">Consultant Indépendant</span>
+                                    <span class="font-medium" data-i18n="card.expertise_label">Expertise Légale :</span>
+                                    <span class="font-semibold text-emerald-600 dark:text-emerald-400" data-i18n="card.expertise_val">Consultant Indépendant</span>
                                 </div>
                                 <div class="flex items-center justify-between text-slate-600 dark:text-slate-400">
-                                    <span class="font-medium">Permis :</span>
-                                    <span class="font-semibold text-slate-900 dark:text-white">Catégorie B (Disponible)</span>
+                                    <span class="font-medium" data-i18n="card.permis_label">Permis :</span>
+                                    <span class="font-semibold text-slate-900 dark:text-white" data-i18n="card.permis_val">Catégorie B (Disponible)</span>
                                 </div>
                             </div>
 
@@ -525,10 +678,10 @@
 
                             <div class="flex gap-4 w-full">
                                 <a href="mailto:bouafia.rehabi@gmail.com" class="flex-1 text-center py-2.5 bg-slate-100 dark:bg-slate-700 hover:bg-primary-50 dark:hover:bg-primary-950/30 text-slate-700 dark:text-slate-300 hover:text-primary-600 dark:hover:text-primary-400 rounded-xl font-semibold text-xs transition-colors">
-                                    <i class="fa-solid fa-envelope mr-1.5"></i> Écrire
+                                    <i class="fa-solid fa-envelope mr-1.5"></i> <span data-i18n="card.write">Écrire</span>
                                 </a>
                                 <a href="tel:0656371202" class="flex-1 text-center py-2.5 bg-slate-100 dark:bg-slate-700 hover:bg-primary-50 dark:hover:bg-primary-950/30 text-slate-700 dark:text-slate-300 hover:text-primary-600 dark:hover:text-primary-400 rounded-xl font-semibold text-xs transition-colors">
-                                    <i class="fa-solid fa-phone mr-1.5"></i> Appeler
+                                    <i class="fa-solid fa-phone mr-1.5"></i> <span data-i18n="card.call">Appeler</span>
                                 </a>
                             </div>
                         </div>
@@ -545,19 +698,19 @@
             <div class="grid grid-cols-2 lg:grid-cols-4 gap-8 text-center">
                 <div class="space-y-2">
                     <p class="text-4xl sm:text-5xl font-extrabold text-primary-600 dark:text-primary-400 font-serif">30+</p>
-                    <p class="text-xs sm:text-sm font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Années d'Expérience</p>
+                    <p class="text-xs sm:text-sm font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider" data-i18n="stat.years">Années d'Expérience</p>
                 </div>
                 <div class="space-y-2">
                     <p class="text-4xl sm:text-5xl font-extrabold text-primary-600 dark:text-primary-400 font-serif">1 000+</p>
-                    <p class="text-xs sm:text-sm font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Cadres & Ingénieurs Formés</p>
+                    <p class="text-xs sm:text-sm font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider" data-i18n="stat.cadres">Cadres & Ingénieurs Formés</p>
                 </div>
                 <div class="space-y-2">
                     <p class="text-4xl sm:text-5xl font-extrabold text-primary-600 dark:text-primary-400 font-serif">50+</p>
-                    <p class="text-xs sm:text-sm font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Grandes Entreprises Clientes</p>
+                    <p class="text-xs sm:text-sm font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider" data-i18n="stat.entreprises">Grandes Entreprises Clientes</p>
                 </div>
                 <div class="space-y-2">
                     <p class="text-4xl sm:text-5xl font-extrabold text-primary-600 dark:text-primary-400 font-serif">20+</p>
-                    <p class="text-xs sm:text-sm font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Modules Technologiques</p>
+                    <p class="text-xs sm:text-sm font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider" data-i18n="stat.modules">Modules Technologiques</p>
                 </div>
             </div>
         </div>
@@ -577,14 +730,14 @@
                         <div class="absolute inset-0 bg-grid-pattern opacity-10"></div>
                         <div class="relative z-10 space-y-6">
                             <i class="fa-solid fa-quote-left text-primary-400 text-4xl"></i>
-                            <p class="text-lg font-medium leading-relaxed font-serif italic text-slate-100">
+                            <p data-i18n="about.quote" class="text-lg font-medium leading-relaxed font-serif italic text-slate-100">
                                 "La transmission du savoir et la sécurisation des architectures applicatives sont les deux piliers de la transformation numérique d'une entreprise moderne. Mon engagement est d'amener les équipes vers l'excellence technologique."
                             </p>
                             <div class="flex items-center gap-3 pt-4">
                                 <img src="assets/me.jpeg" alt="Bouafia Rehabi" class="w-10 h-10 rounded-full object-cover object-top border border-primary-500 bg-slate-100">
                                 <div>
                                     <p class="font-bold text-sm text-white">Bouafia Rehabi</p>
-                                    <p class="text-xs text-primary-400">Consultant & Conférencier Senior</p>
+                                    <p data-i18n="about.quote_sub" class="text-xs text-primary-400">Consultant & Conférencier Senior</p>
                                 </div>
                             </div>
                         </div>
@@ -594,20 +747,20 @@
                 <!-- Right text content -->
                 <div class="lg:col-span-7 space-y-6">
                     <div class="space-y-2">
-                        <span class="text-xs font-bold uppercase tracking-widest text-primary-600 dark:text-primary-400">Mon Profil</span>
-                        <h2 class="text-3xl sm:text-4xl font-extrabold font-serif text-slate-900 dark:text-white leading-tight">
+                        <span data-i18n="about.tagline" class="text-xs font-bold uppercase tracking-widest text-primary-600 dark:text-primary-400">Mon Profil</span>
+                        <h2 data-i18n="about.heading" class="text-3xl sm:text-4xl font-extrabold font-serif text-slate-900 dark:text-white leading-tight">
                             Consultant Informatique Senior et Enseignant Académique
                         </h2>
                     </div>
 
                     <div class="text-slate-600 dark:text-slate-300 space-y-4 leading-relaxed">
-                        <p>
+                        <p data-i18n="about.p1">
                             Fort d'une solide expérience pluridimensionnelle, j'accompagne les cadres dirigeants et les ingénieurs des plus grandes organisations d'Algérie (comme la CACI, l'EPAL, Algérie Télécom et Halliburton) à travers des programmes de formation intensifs, de l'audit et de l'intégration technique.
                         </p>
-                        <p>
+                        <p data-i18n="about.p2">
                             Depuis 2025, je transmets mon savoir en tant qu'<strong>Enseignant à l'Université d'Alger 2</strong>, tout en formant des cadres d'entreprises. Ma double casquette d'académicien et de consultant de terrain m'offre une vision réaliste et opérationnelle des besoins de l'industrie.
                         </p>
-                        <p>
+                        <p data-i18n="about.p3">
                             Mes domaines d'excellence se concentrent autour de la <strong>DATA ANALYST</strong>, de la <strong>cybersécurité</strong>, de l'<strong>ingénierie logicielle (Python, Java, .NET Core)</strong> et du <strong>décisionnel (Power BI)</strong>.
                         </p>
                     </div>
@@ -617,29 +770,29 @@
                         <div class="flex items-start gap-3">
                             <span class="text-emerald-500 mt-1"><i class="fa-solid fa-circle-check"></i></span>
                             <div>
-                                <h4 class="font-bold text-slate-900 dark:text-white text-sm">Data Analyste</h4>
-                                <p class="text-xs text-slate-500 dark:text-slate-400">Excel · Python · SQL · Power BI · Tableau</p>
+                                <h4 data-i18n="about.bullet1_title" class="font-bold text-slate-900 dark:text-white text-sm">Data Analyste</h4>
+                                <p data-i18n="about.bullet1_sub" class="text-xs text-slate-500 dark:text-slate-400">Excel · Python · SQL · Power BI · Tableau</p>
                             </div>
                         </div>
                         <div class="flex items-start gap-3">
                             <span class="text-emerald-500 mt-1"><i class="fa-solid fa-circle-check"></i></span>
                             <div>
-                                <h4 class="font-bold text-slate-900 dark:text-white text-sm">Formateur Certifié Cadres</h4>
-                                <p class="text-xs text-slate-500 dark:text-slate-400">Pédagogie de haut niveau adaptée aux directeurs.</p>
+                                <h4 data-i18n="about.bullet2_title" class="font-bold text-slate-900 dark:text-white text-sm">Formateur Certifié Cadres</h4>
+                                <p data-i18n="about.bullet2_sub" class="text-xs text-slate-500 dark:text-slate-400">Pédagogie de haut niveau adaptée aux directeurs.</p>
                             </div>
                         </div>
                         <div class="flex items-start gap-3">
                             <span class="text-emerald-500 mt-1"><i class="fa-solid fa-circle-check"></i></span>
                             <div>
-                                <h4 class="font-bold text-slate-900 dark:text-white text-sm">Expert Full-Stack & DevOPS</h4>
-                                <p class="text-xs text-slate-500 dark:text-slate-400">Maîtrise complète du cycle de vie logiciel.</p>
+                                <h4 data-i18n="about.bullet3_title" class="font-bold text-slate-900 dark:text-white text-sm">Expert Full-Stack & DevOPS</h4>
+                                <p data-i18n="about.bullet3_sub" class="text-xs text-slate-500 dark:text-slate-400">Maîtrise complète du cycle de vie logiciel.</p>
                             </div>
                         </div>
                         <div class="flex items-start gap-3">
                             <span class="text-emerald-500 mt-1"><i class="fa-solid fa-circle-check"></i></span>
                             <div>
-                                <h4 class="font-bold text-slate-900 dark:text-white text-sm">EUROPEAN BACHELOR d'Université 3IL</h4>
-                                <p class="text-xs text-slate-500 dark:text-slate-400">Diplômé d'une école d'ingénieurs française.</p>
+                                <h4 data-i18n="about.bullet4_title" class="font-bold text-slate-900 dark:text-white text-sm">EUROPEAN BACHELOR d'Université 3IL</h4>
+                                <p data-i18n="about.bullet4_sub" class="text-xs text-slate-500 dark:text-slate-400">Diplômé d'une école d'ingénieurs française.</p>
                             </div>
                         </div>
                     </div>
@@ -654,9 +807,9 @@
     <section id="skills" class="py-24 bg-white dark:bg-slate-800/30 border-y border-slate-100 dark:border-slate-800/50 reveal">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="text-center max-w-3xl mx-auto space-y-4 mb-16">
-                <span class="text-xs font-bold uppercase tracking-widest text-primary-600 dark:text-primary-400">Mon Arsenal Technique</span>
-                <h2 class="text-3xl sm:text-4xl font-extrabold font-serif text-slate-900 dark:text-white">Expertise & Technologies Maîtrisées</h2>
-                <p class="text-slate-600 dark:text-slate-300">
+                <span data-i18n="skills.tagline" class="text-xs font-bold uppercase tracking-widest text-primary-600 dark:text-primary-400">Mon Arsenal Technique</span>
+                <h2 data-i18n="skills.heading" class="text-3xl sm:text-4xl font-extrabold font-serif text-slate-900 dark:text-white">Expertise & Technologies Maîtrisées</h2>
+                <p data-i18n="skills.desc" class="text-slate-600 dark:text-slate-300">
                     Mes compétences couvrent l'intégralité du cycle informatique d'entreprise, allant du codage pur à la mise en œuvre de politiques de sécurité d'envergure.
                 </p>
             </div>
@@ -671,8 +824,8 @@
                             <i class="fa-solid fa-shield-halved"></i>
                         </div>
                         <div>
-                            <h3 class="font-bold text-lg text-slate-900 dark:text-white">Sécurité & Gouvernance</h3>
-                            <p class="text-xs text-slate-500">Protection & Réglementation</p>
+                            <h3 data-i18n="skills.card1_title" class="font-bold text-lg text-slate-900 dark:text-white">Sécurité & Gouvernance</h3>
+                            <p data-i18n="skills.card1_sub" class="text-xs text-slate-500">Protection & Réglementation</p>
                         </div>
                     </div>
                     <ul class="space-y-2.5 text-sm">
@@ -691,8 +844,8 @@
                             <i class="fa-solid fa-code"></i>
                         </div>
                         <div>
-                            <h3 class="font-bold text-lg text-slate-900 dark:text-white">Développement Web</h3>
-                            <p class="text-xs text-slate-500">Langages de Programmation</p>
+                            <h3 data-i18n="skills.card2_title" class="font-bold text-lg text-slate-900 dark:text-white">Développement Web</h3>
+                            <p data-i18n="skills.card2_sub" class="text-xs text-slate-500">Langages de Programmation</p>
                         </div>
                     </div>
                     <ul class="space-y-2.5 text-sm">
@@ -711,8 +864,8 @@
                             <i class="fa-brands fa-react"></i>
                         </div>
                         <div>
-                            <h3 class="font-bold text-lg text-slate-900 dark:text-white">Frameworks & Mobile</h3>
-                            <p class="text-xs text-slate-500">Frameworks Client & Mobile</p>
+                            <h3 data-i18n="skills.card3_title" class="font-bold text-lg text-slate-900 dark:text-white">Frameworks & Mobile</h3>
+                            <p data-i18n="skills.card3_sub" class="text-xs text-slate-500">Frameworks Client & Mobile</p>
                         </div>
                     </div>
                     <ul class="space-y-2.5 text-sm">
@@ -731,8 +884,8 @@
                             <i class="fa-solid fa-chart-line"></i>
                         </div>
                         <div>
-                            <h3 class="font-bold text-lg text-slate-900 dark:text-white">Data & Intelligence</h3>
-                            <p class="text-xs text-slate-500">BI, SGBD & IA</p>
+                            <h3 data-i18n="skills.card4_title" class="font-bold text-lg text-slate-900 dark:text-white">Data & Intelligence</h3>
+                            <p data-i18n="skills.card4_sub" class="text-xs text-slate-500">BI, SGBD & IA</p>
                         </div>
                     </div>
                     <ul class="space-y-2.5 text-sm">
@@ -751,8 +904,8 @@
                             <i class="fa-solid fa-layer-group"></i>
                         </div>
                         <div>
-                            <h3 class="font-bold text-lg text-slate-900 dark:text-white">CMS, LMS & Bureautique</h3>
-                            <p class="text-xs text-slate-500">Plateformes web & Office</p>
+                            <h3 data-i18n="skills.card5_title" class="font-bold text-lg text-slate-900 dark:text-white">CMS, LMS & Bureautique</h3>
+                            <p data-i18n="skills.card5_sub" class="text-xs text-slate-500">Plateformes web & Office</p>
                         </div>
                     </div>
                     <ul class="space-y-2.5 text-sm">
@@ -771,8 +924,8 @@
                             <i class="fa-solid fa-infinity"></i>
                         </div>
                         <div>
-                            <h3 class="font-bold text-lg text-slate-900 dark:text-white">Méthodes & DevOps</h3>
-                            <p class="text-xs text-slate-500">Architecture & DevOps</p>
+                            <h3 data-i18n="skills.card6_title" class="font-bold text-lg text-slate-900 dark:text-white">Méthodes & DevOps</h3>
+                            <p data-i18n="skills.card6_sub" class="text-xs text-slate-500">Architecture & DevOps</p>
                         </div>
                     </div>
                     <ul class="space-y-2.5 text-sm">
@@ -788,12 +941,12 @@
 
             <!-- Language Badge cloud -->
             <div class="mt-16 text-center">
-                <p class="text-xs font-semibold uppercase tracking-wider text-slate-400 dark:text-slate-500 mb-4">Langues de Travail & Communication</p>
+                <p data-i18n="skills.langs_title" class="text-xs font-semibold uppercase tracking-wider text-slate-400 dark:text-slate-500 mb-4">Langues de Travail & Communication</p>
                 <div class="flex flex-wrap justify-center gap-3">
-                    <span class="inline-flex items-center gap-2 px-4 py-2 bg-slate-100 dark:bg-slate-800 rounded-full text-xs font-semibold"><span class="w-2.5 h-2.5 rounded-full bg-emerald-500"></span> Arabe (Maternelle)</span>
-                    <span class="inline-flex items-center gap-2 px-4 py-2 bg-slate-100 dark:bg-slate-800 rounded-full text-xs font-semibold"><span class="w-2.5 h-2.5 rounded-full bg-blue-500"></span> Français (Très bien - Lu, Parlé, Écrit)</span>
-                    <span class="inline-flex items-center gap-2 px-4 py-2 bg-slate-100 dark:bg-slate-800 rounded-full text-xs font-semibold"><span class="w-2.5 h-2.5 rounded-full bg-cyan-500"></span> Anglais (Bien - Lu, Parlé, Écrit)</span>
-                    <span class="inline-flex items-center gap-2 px-4 py-2 bg-slate-100 dark:bg-slate-800 rounded-full text-xs font-semibold"><span class="w-2.5 h-2.5 rounded-full bg-red-500"></span> Roumain (Bien - Lu, Parlé, Écrit)</span>
+                    <span class="inline-flex items-center gap-2 px-4 py-2 bg-slate-100 dark:bg-slate-800 rounded-full text-xs font-semibold"><span class="w-2.5 h-2.5 rounded-full bg-emerald-500"></span> <span data-i18n="skills.lang_ar">Arabe (Maternelle)</span></span>
+                    <span class="inline-flex items-center gap-2 px-4 py-2 bg-slate-100 dark:bg-slate-800 rounded-full text-xs font-semibold"><span class="w-2.5 h-2.5 rounded-full bg-blue-500"></span> <span data-i18n="skills.lang_fr">Français (Très bien - Lu, Parlé, Écrit)</span></span>
+                    <span class="inline-flex items-center gap-2 px-4 py-2 bg-slate-100 dark:bg-slate-800 rounded-full text-xs font-semibold"><span class="w-2.5 h-2.5 rounded-full bg-cyan-500"></span> <span data-i18n="skills.lang_en">Anglais (Bien - Lu, Parlé, Écrit)</span></span>
+                    <span class="inline-flex items-center gap-2 px-4 py-2 bg-slate-100 dark:bg-slate-800 rounded-full text-xs font-semibold"><span class="w-2.5 h-2.5 rounded-full bg-red-500"></span> <span data-i18n="skills.lang_ro">Roumain (Bien - Lu, Parlé, Écrit)</span></span>
                 </div>
             </div>
         </div>
@@ -803,9 +956,9 @@
     <section id="experiences" class="py-24 reveal">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="text-center max-w-3xl mx-auto space-y-4 mb-12">
-                <span class="text-xs font-bold uppercase tracking-widest text-primary-600 dark:text-primary-400">Catalogue d'Interventions</span>
-                <h2 class="text-3xl sm:text-4xl font-extrabold font-serif text-slate-900 dark:text-white">Formations Dispensées & Expériences</h2>
-                <p class="text-slate-600 dark:text-slate-300">
+                <span class="text-xs font-bold uppercase tracking-widest text-primary-600 dark:text-primary-400" data-i18n="exp.tagline">Catalogue d'Interventions</span>
+                <h2 class="text-3xl sm:text-4xl font-extrabold font-serif text-slate-900 dark:text-white" data-i18n="exp.heading">Formations Dispensées & Expériences</h2>
+                <p class="text-slate-600 dark:text-slate-300" data-i18n="exp.desc">
                     J'interviens de manière récurrente auprès d'organismes de formation d'élite et de grands comptes. Filtrez par catégorie ou recherchez une thématique spécifique.
                 </p>
             </div>
@@ -817,27 +970,27 @@
                     <!-- Search input -->
                     <div class="relative flex-1 max-w-md">
                         <i class="fa-solid fa-magnifying-glass absolute left-4 top-1/2 -translate-y-1/2 text-slate-400"></i>
-                        <input type="text" x-model="searchQuery" placeholder="Rechercher (ex: Excel, Cyber, Power BI, CACI...)" class="w-full pl-11 pr-4 py-3 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700/80 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-primary-500 dark:focus:ring-primary-400 transition-all">
+                        <input type="text" x-model="searchQuery" placeholder="Rechercher (ex: Excel, Cyber, Power BI, CACI...)" data-i18n-ph="exp.search_placeholder" class="w-full pl-11 pr-4 py-3 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700/80 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-primary-500 dark:focus:ring-primary-400 transition-all">
                     </div>
 
                     <!-- Category Tab Filters -->
                     <div class="flex flex-wrap gap-2">
-                        <button @click="activeTab = 'all'" :class="activeTab === 'all' ? 'bg-primary-600 text-white' : 'bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-600'" class="px-4 py-2.5 rounded-lg text-xs font-semibold transition-all">
+                        <button @click="activeTab = 'all'" :class="activeTab === 'all' ? 'bg-primary-600 text-white' : 'bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-600'" class="px-4 py-2.5 rounded-lg text-xs font-semibold transition-all" data-i18n="exp.filter_all">
                             Tout voir
                         </button>
-                        <button @click="activeTab = 'security'" :class="activeTab === 'security' ? 'bg-primary-600 text-white' : 'bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-600'" class="px-4 py-2.5 rounded-lg text-xs font-semibold transition-all">
+                        <button @click="activeTab = 'security'" :class="activeTab === 'security' ? 'bg-primary-600 text-white' : 'bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-600'" class="px-4 py-2.5 rounded-lg text-xs font-semibold transition-all" data-i18n="exp.filter_security">
                             Sécurité & RGPD
                         </button>
-                        <button @click="activeTab = 'dev'" :class="activeTab === 'dev' ? 'bg-primary-600 text-white' : 'bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-600'" class="px-4 py-2.5 rounded-lg text-xs font-semibold transition-all">
+                        <button @click="activeTab = 'dev'" :class="activeTab === 'dev' ? 'bg-primary-600 text-white' : 'bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-600'" class="px-4 py-2.5 rounded-lg text-xs font-semibold transition-all" data-i18n="exp.filter_dev">
                             Dév Web & Mobile
                         </button>
-                        <button @click="activeTab = 'data'" :class="activeTab === 'data' ? 'bg-primary-600 text-white' : 'bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-600'" class="px-4 py-2.5 rounded-lg text-xs font-semibold transition-all">
+                        <button @click="activeTab = 'data'" :class="activeTab === 'data' ? 'bg-primary-600 text-white' : 'bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-600'" class="px-4 py-2.5 rounded-lg text-xs font-semibold transition-all" data-i18n="exp.filter_data">
                             Data & BI
                         </button>
-                        <button @click="activeTab = 'office'" :class="activeTab === 'office' ? 'bg-primary-600 text-white' : 'bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-600'" class="px-4 py-2.5 rounded-lg text-xs font-semibold transition-all">
+                        <button @click="activeTab = 'office'" :class="activeTab === 'office' ? 'bg-primary-600 text-white' : 'bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-600'" class="px-4 py-2.5 rounded-lg text-xs font-semibold transition-all" data-i18n="exp.filter_office">
                             Bureautique Pro
                         </button>
-                        <button @click="activeTab = 'management'" :class="activeTab === 'management' ? 'bg-primary-600 text-white' : 'bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-600'" class="px-4 py-2.5 rounded-lg text-xs font-semibold transition-all">
+                        <button @click="activeTab = 'management'" :class="activeTab === 'management' ? 'bg-primary-600 text-white' : 'bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-600'" class="px-4 py-2.5 rounded-lg text-xs font-semibold transition-all" data-i18n="exp.filter_management">
                             Processus / DevOps
                         </button>
                     </div>
@@ -849,7 +1002,7 @@
                         Affichage de <span class="text-primary-600 dark:text-primary-400 font-bold" x-text="filteredExperiences.length"></span> sessions sur <span class="font-bold" x-text="experiences.length"></span> enregistrées
                     </div>
                     <div x-show="searchQuery || activeTab !== 'all'">
-                        <button @click="searchQuery = ''; activeTab = 'all'" class="text-primary-500 hover:underline">Réinitialiser les filtres</button>
+                        <button @click="searchQuery = ''; activeTab = 'all'" class="text-primary-500 hover:underline" data-i18n="exp.reset">Réinitialiser les filtres</button>
                     </div>
                 </div>
 
@@ -858,10 +1011,10 @@
                     <table class="w-full text-left border-collapse">
                         <thead>
                             <tr class="bg-slate-50 dark:bg-slate-900/60 border-b border-slate-100 dark:border-slate-800 text-xs font-bold text-slate-500 dark:text-slate-400 uppercase">
-                                <th class="py-4.5 px-6">Période</th>
-                                <th class="py-4.5 px-6">Établissement</th>
-                                <th class="py-4.5 px-6">Module Dispensé</th>
-                                <th class="py-4.5 px-6">Client Finaux / Cible</th>
+                                <th class="py-4.5 px-6" data-i18n="exp.th_period">Période</th>
+                                <th class="py-4.5 px-6" data-i18n="exp.th_institution">Établissement</th>
+                                <th class="py-4.5 px-6" data-i18n="exp.th_module">Module Dispensé</th>
+                                <th class="py-4.5 px-6" data-i18n="exp.th_client">Client Finaux / Cible</th>
                             </tr>
                         </thead>
                         <tbody class="divide-y divide-slate-100 dark:divide-slate-800 text-sm">
@@ -886,7 +1039,7 @@
                                 <tr>
                                     <td colspan="4" class="py-12 text-center text-slate-500 dark:text-slate-400">
                                         <i class="fa-solid fa-folder-open text-3xl text-slate-300 dark:text-slate-600 mb-2 block"></i>
-                                        Aucun résultat ne correspond à vos critères de recherche.
+                                        <span data-i18n="exp.empty">Aucun résultat ne correspond à vos critères de recherche.</span>
                                     </td>
                                 </tr>
                             </template>
@@ -905,7 +1058,7 @@
                                 </div>
                                 <h4 class="font-bold text-base text-slate-900 dark:text-white" x-text="exp.module"></h4>
                                 <div class="text-xs text-slate-600 dark:text-slate-400">
-                                    <span class="font-bold text-slate-700 dark:text-slate-300">Établissement: </span> <span x-text="exp.etablissement"></span>
+                                    <span class="font-bold text-slate-700 dark:text-slate-300" data-i18n="exp.mobile_label">Établissement: </span> <span x-text="exp.etablissement"></span>
                                 </div>
                                 <div class="bg-slate-50 dark:bg-slate-900/60 p-3 rounded-xl space-y-1">
                                     <p class="text-xs font-bold text-slate-800 dark:text-slate-200 flex items-center gap-1">
@@ -918,7 +1071,7 @@
                         </div>
                     </template>
                     <template x-if="filteredExperiences.length === 0">
-                        <div class="bg-white dark:bg-slate-800 p-12 rounded-2xl border border-slate-100 dark:border-slate-800 text-center text-slate-500 col-span-2">
+                        <div class="bg-white dark:bg-slate-800 p-12 rounded-2xl border border-slate-100 dark:border-slate-800 text-center text-slate-500 col-span-2" data-i18n="exp.empty_mobile">
                             Aucun résultat trouvé.
                         </div>
                     </template>
@@ -931,9 +1084,9 @@
     <section id="education" class="py-24 bg-slate-50 dark:bg-slate-800/30 border-y border-slate-100 dark:border-slate-800/50 reveal">
         <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="text-center space-y-4 mb-16">
-                <span class="text-xs font-bold uppercase tracking-widest text-primary-600 dark:text-primary-400">Chronologie de Carrière</span>
-                <h2 class="text-3xl sm:text-4xl font-extrabold font-serif text-slate-900 dark:text-white">Formations & Parcours Académique</h2>
-                <p class="text-slate-600 dark:text-slate-300">
+                <span class="text-xs font-bold uppercase tracking-widest text-primary-600 dark:text-primary-400" data-i18n="edu.tagline">Chronologie de Carrière</span>
+                <h2 class="text-3xl sm:text-4xl font-extrabold font-serif text-slate-900 dark:text-white" data-i18n="edu.heading">Formations & Parcours Académique</h2>
+                <p class="text-slate-600 dark:text-slate-300" data-i18n="edu.desc">
                     Découvrez mes certifications, diplômes internationaux et rôles de direction sur les trente dernières années.
                 </p>
             </div>
@@ -952,9 +1105,9 @@
                     
                     <div class="bg-white dark:bg-slate-800 p-6 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-800 ml-6">
                         <span class="md:hidden block text-xs font-bold text-primary-600 mb-2">Janv. 2026</span>
-                        <h3 class="font-bold text-lg text-slate-900 dark:text-white">Consultant Informatique Senior</h3>
-                        <p class="text-sm text-primary-600 dark:text-primary-400 font-medium">ISGP Formation</p>
-                        <p class="text-sm text-slate-500 mt-2">Animation de modules de haut niveau et de séminaires d'architecture logicielle.</p>
+                        <h3 class="font-bold text-lg text-slate-900 dark:text-white" data-i18n="edu.t1_title">Consultant Informatique Senior</h3>
+                        <p class="text-sm text-primary-600 dark:text-primary-400 font-medium" data-i18n="edu.t1_sub">ISGP Formation</p>
+                        <p class="text-sm text-slate-500 mt-2" data-i18n="edu.t1_desc">Animation de modules de haut niveau et de séminaires d'architecture logicielle.</p>
                     </div>
                 </div>
 
@@ -967,9 +1120,9 @@
                     
                     <div class="bg-white dark:bg-slate-800 p-6 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-800 ml-6">
                         <span class="md:hidden block text-xs font-bold text-primary-600 mb-2">Nov. 2025</span>
-                        <h3 class="font-bold text-lg text-slate-900 dark:text-white">Enseignant Universitaire</h3>
-                        <p class="text-sm text-primary-600 dark:text-primary-400 font-medium">Université Alger 2 • Alger, Algérie</p>
-                        <p class="text-sm text-slate-500 mt-2">Enseignement académique théorique et pratique des langages informatiques et bases de données.</p>
+                        <h3 class="font-bold text-lg text-slate-900 dark:text-white" data-i18n="edu.t2_title">Enseignant Universitaire</h3>
+                        <p class="text-sm text-primary-600 dark:text-primary-400 font-medium" data-i18n="edu.t2_sub">Université Alger 2 • Alger, Algérie</p>
+                        <p class="text-sm text-slate-500 mt-2" data-i18n="edu.t2_desc">Enseignement académique théorique et pratique des langages informatiques et bases de données.</p>
                     </div>
                 </div>
 
@@ -982,9 +1135,9 @@
                     
                     <div class="bg-white dark:bg-slate-800 p-6 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-800 ml-6">
                         <span class="md:hidden block text-xs font-bold text-primary-600 mb-2">Janv. 2025</span>
-                        <h3 class="font-bold text-lg text-slate-900 dark:text-white">Consultant Informatique CACI</h3>
-                        <p class="text-sm text-primary-600 dark:text-primary-400 font-medium">CACI Formation (Chambre Algérienne de Commerce)</p>
-                        <p class="text-sm text-slate-500 mt-2">Formateur de cadres d'entreprises sur la législation Loi 18-07 relative à la protection des données personnelles.</p>
+                        <h3 class="font-bold text-lg text-slate-900 dark:text-white" data-i18n="edu.t3_title">Consultant Informatique CACI</h3>
+                        <p class="text-sm text-primary-600 dark:text-primary-400 font-medium" data-i18n="edu.t3_sub">CACI Formation (Chambre Algérienne de Commerce)</p>
+                        <p class="text-sm text-slate-500 mt-2" data-i18n="edu.t3_desc">Formateur de cadres d'entreprises sur la législation Loi 18-07 relative à la protection des données personnelles.</p>
                     </div>
                 </div>
 
@@ -997,9 +1150,9 @@
                     
                     <div class="bg-white dark:bg-slate-800 p-6 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-800 ml-6">
                         <span class="md:hidden block text-xs font-bold text-primary-600 mb-2">Janv. 2018</span>
-                        <h3 class="font-bold text-lg text-slate-900 dark:text-white">Directeur d'Établissement</h3>
-                        <p class="text-sm text-primary-600 dark:text-primary-400 font-medium">École de Formation Professionnelle Informica • Boumerdes</p>
-                        <p class="text-sm text-slate-500 mt-2">Gestion globale, conception de syllabus pédagogiques agréés et encadrement d'élèves et formateurs.</p>
+                        <h3 class="font-bold text-lg text-slate-900 dark:text-white" data-i18n="edu.t4_title">Directeur d'Établissement</h3>
+                        <p class="text-sm text-primary-600 dark:text-primary-400 font-medium" data-i18n="edu.t4_sub">École de Formation Professionnelle Informica • Boumerdes</p>
+                        <p class="text-sm text-slate-500 mt-2" data-i18n="edu.t4_desc">Gestion globale, conception de syllabus pédagogiques agréés et encadrement d'élèves et formateurs.</p>
                     </div>
                 </div>
 
@@ -1012,9 +1165,9 @@
                     
                     <div class="bg-white dark:bg-slate-800 p-6 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-800 ml-6">
                         <span class="md:hidden block text-xs font-bold text-primary-600 mb-2">Janv. 2013</span>
-                        <h3 class="font-bold text-lg text-slate-900 dark:text-white">Master Professionnel Informatique & CSI</h3>
-                        <p class="text-sm text-primary-600 dark:text-primary-400 font-medium">Université 3IL – Limoges, France</p>
-                        <p class="text-sm text-slate-500 mt-2">Spécialisation en Conception de Systèmes d'Information et architecture distribuée.</p>
+                        <h3 class="font-bold text-lg text-slate-900 dark:text-white" data-i18n="edu.t5_title">Master Professionnel Informatique & CSI</h3>
+                        <p class="text-sm text-primary-600 dark:text-primary-400 font-medium" data-i18n="edu.t5_sub">Université 3IL – Limoges, France</p>
+                        <p class="text-sm text-slate-500 mt-2" data-i18n="edu.t5_desc">Spécialisation en Conception de Systèmes d'Information et architecture distribuée.</p>
                     </div>
                 </div>
 
@@ -1027,9 +1180,9 @@
                     
                     <div class="bg-white dark:bg-slate-800 p-6 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-800 ml-6">
                         <span class="md:hidden block text-xs font-bold text-primary-600 mb-2">Sept. 2010</span>
-                        <h3 class="font-bold text-lg text-slate-900 dark:text-white">Ingénieur Professionnel & European Bachelor</h3>
-                        <p class="text-sm text-primary-600 dark:text-primary-400 font-medium">Université 3IL – Limoges, France</p>
-                        <p class="text-sm text-slate-500 mt-2">Bases approfondies de génie logiciel, réseaux informatiques et administration système.</p>
+                        <h3 class="font-bold text-lg text-slate-900 dark:text-white" data-i18n="edu.t6_title">Ingénieur Professionnel & European Bachelor</h3>
+                        <p class="text-sm text-primary-600 dark:text-primary-400 font-medium" data-i18n="edu.t6_sub">Université 3IL – Limoges, France</p>
+                        <p class="text-sm text-slate-500 mt-2" data-i18n="edu.t6_desc">Bases approfondies de génie logiciel, réseaux informatiques et administration système.</p>
                     </div>
                 </div>
 
@@ -1042,9 +1195,9 @@
                     
                     <div class="bg-white dark:bg-slate-800 p-6 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-800 ml-6">
                         <span class="md:hidden block text-xs font-bold text-primary-600 mb-2">Janv. 2008</span>
-                        <h3 class="font-bold text-lg text-slate-900 dark:text-white">Technicien Supérieur Informatique</h3>
-                        <p class="text-sm text-primary-600 dark:text-primary-400 font-medium">UNSFP El-Mohammadia • Algérie</p>
-                        <p class="text-sm text-slate-500 mt-1">Option : Bases de Données (Conception, requêtes complexes et modélisation).</p>
+                        <h3 class="font-bold text-lg text-slate-900 dark:text-white" data-i18n="edu.t7_title">Technicien Supérieur Informatique</h3>
+                        <p class="text-sm text-primary-600 dark:text-primary-400 font-medium" data-i18n="edu.t7_sub">UNSFP El-Mohammadia • Algérie</p>
+                        <p class="text-sm text-slate-500 mt-1" data-i18n="edu.t7_desc">Option : Bases de Données (Conception, requêtes complexes et modélisation).</p>
                     </div>
                 </div>
 
@@ -1056,9 +1209,9 @@
     <section id="clients" class="py-24 bg-white dark:bg-slate-900 reveal">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="text-center max-w-3xl mx-auto space-y-4 mb-16">
-                <span class="text-xs font-bold uppercase tracking-widest text-primary-600 dark:text-primary-400">Références Clés</span>
-                <h2 class="text-3xl sm:text-4xl font-extrabold font-serif text-slate-900 dark:text-white">Ils m'ont fait confiance</h2>
-                <p class="text-slate-600 dark:text-slate-300">
+                <span class="text-xs font-bold uppercase tracking-widest text-primary-600 dark:text-primary-400" data-i18n="clients.tagline">Références Clés</span>
+                <h2 class="text-3xl sm:text-4xl font-extrabold font-serif text-slate-900 dark:text-white" data-i18n="clients.heading">Ils m'ont fait confiance</h2>
+                <p class="text-slate-600 dark:text-slate-300" data-i18n="clients.desc">
                     Mes cours et services de consulting ont été délivrés à des multinationales d'envergure, des ministères et de grands services portuaires et de télécommunications.
                 </p>
             </div>
@@ -1251,11 +1404,11 @@
                 <div class="flex items-center gap-3 text-center sm:text-left">
                     <i class="fa-solid fa-file-signature text-2xl text-primary-600 dark:text-primary-400"></i>
                     <div>
-                        <h4 class="font-bold text-sm text-slate-900 dark:text-white">Attestations de bonne exécution validées</h4>
-                        <p class="text-xs text-slate-500 dark:text-slate-400">Certificats disponibles auprès des instituts agréés (Royal School, Kaizen, CNAT, AGA...)</p>
+                        <h4 class="font-bold text-sm text-slate-900 dark:text-white" data-i18n="attest.banner_title">Attestations de bonne exécution validées</h4>
+                        <p class="text-xs text-slate-500 dark:text-slate-400" data-i18n="attest.banner_desc">Certificats disponibles auprès des instituts agréés (Royal School, Kaizen, CNAT, AGA...)</p>
                     </div>
                 </div>
-                <a href="#contact" class="px-5 py-2.5 bg-primary-600 hover:bg-primary-700 dark:bg-primary-500 text-white font-semibold text-xs rounded-lg transition-colors">
+                <a href="#contact" class="px-5 py-2.5 bg-primary-600 hover:bg-primary-700 dark:bg-primary-500 text-white font-semibold text-xs rounded-lg transition-colors" data-i18n="attest.banner_btn">
                     Demander des références
                 </a>
             </div>
@@ -1270,9 +1423,9 @@
                 <!-- Contact Info Column -->
                 <div class="lg:col-span-5 space-y-8">
                     <div class="space-y-4">
-                        <span class="text-xs font-bold uppercase tracking-widest text-primary-600 dark:text-primary-400">Prendre Contact</span>
-                        <h2 class="text-3xl sm:text-4xl font-extrabold font-serif text-slate-900 dark:text-white">Lançons votre projet ou formation</h2>
-                        <p class="text-slate-600 dark:text-slate-300 text-sm leading-relaxed">
+                        <span class="text-xs font-bold uppercase tracking-widest text-primary-600 dark:text-primary-400" data-i18n="contact.tagline">Prendre Contact</span>
+                        <h2 class="text-3xl sm:text-4xl font-extrabold font-serif text-slate-900 dark:text-white" data-i18n="contact.heading">Lançons votre projet ou formation</h2>
+                        <p class="text-slate-600 dark:text-slate-300 text-sm leading-relaxed" data-i18n="contact.desc">
                             Besoin d'un audit de sécurité ? D'une mise en conformité Loi 18-07 sur la protection des données personnelles ? D'un plan de formation sur-mesure pour vos ingénieurs ?
                             N'hésitez pas à me joindre directement par téléphone ou par message.
                         </p>
@@ -1287,7 +1440,7 @@
                                 <i class="fa-solid fa-phone"></i>
                             </div>
                             <div>
-                                <h4 class="font-bold text-slate-900 dark:text-white">Téléphone mobile</h4>
+                                <h4 class="font-bold text-slate-900 dark:text-white" data-i18n="contact.phone_label">Téléphone mobile</h4>
                                 <p class="text-slate-600 dark:text-slate-400 mt-1">06 56 37 12 02</p>
                                 <p class="text-slate-600 dark:text-slate-400">07 81 73 19 20</p>
                             </div>
@@ -1299,7 +1452,7 @@
                                 <i class="fa-solid fa-envelope"></i>
                             </div>
                             <div>
-                                <h4 class="font-bold text-slate-900 dark:text-white">Courrier Électronique</h4>
+                                <h4 class="font-bold text-slate-900 dark:text-white" data-i18n="contact.email_label">Courrier Électronique</h4>
                                 <p class="text-slate-600 dark:text-slate-400 mt-1"><a href="mailto:bouafia.rehabi@gmail.com" class="hover:text-primary-600 dark:hover:text-primary-400 transition-colors">bouafia.rehabi@gmail.com</a></p>
                             </div>
                         </div>
@@ -1310,9 +1463,9 @@
                                 <i class="fa-solid fa-map-location-dot"></i>
                             </div>
                             <div>
-                                <h4 class="font-bold text-slate-900 dark:text-white">Localisation</h4>
-                                <p class="text-slate-600 dark:text-slate-400 mt-1">Boudouaou, Boumerdes, Algérie</p>
-                                <p class="text-xs text-slate-400 mt-0.5">Mobilité sur toute la wilaya d'Alger et de Boumerdes</p>
+                                <h4 class="font-bold text-slate-900 dark:text-white" data-i18n="contact.location_label">Localisation</h4>
+                                <p class="text-slate-600 dark:text-slate-400 mt-1" data-i18n="contact.location_val">Boudouaou, Boumerdes, Algérie</p>
+                                <p class="text-xs text-slate-400 mt-0.5" data-i18n="contact.location_sub">Mobilité sur toute la wilaya d'Alger et de Boumerdes</p>
                             </div>
                         </div>
 
@@ -1320,10 +1473,10 @@
 
                     <!-- Direct Call Action Callout -->
                     <div class="bg-gradient-to-tr from-primary-900 to-slate-800 text-white rounded-2xl p-6 shadow-md">
-                        <h4 class="font-bold text-sm text-primary-400">Besoin d'un entretien immédiat ?</h4>
-                        <p class="text-xs text-slate-300 mt-1">Je suis joignable du samedi au jeudi de 8h00 à 18h00 pour échanger sur vos besoins techniques.</p>
+                        <h4 class="font-bold text-sm text-primary-400" data-i18n="contact.immediate_title">Besoin d'un entretien immédiat ?</h4>
+                        <p class="text-xs text-slate-300 mt-1" data-i18n="contact.immediate_desc">Je suis joignable du samedi au jeudi de 8h00 à 18h00 pour échanger sur vos besoins techniques.</p>
                         <a href="tel:0656371202" class="inline-flex items-center gap-2 mt-4 text-xs font-bold text-white hover:text-primary-400 transition-colors">
-                            <span>Appeler directement</span>
+                            <span data-i18n="contact.immediate_btn">Appeler directement</span>
                             <i class="fa-solid fa-arrow-right"></i>
                         </a>
                     </div>
@@ -1337,48 +1490,48 @@
                             <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
                                 <!-- First & Last name -->
                                 <div class="space-y-2">
-                                    <label for="name" class="block text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">Nom Complet</label>
-                                    <input type="text" id="name" name="name" required placeholder="Ex: Slimane Amrani" class="w-full px-4 py-3 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700/80 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-primary-500 dark:focus:ring-primary-400 transition-all">
+                                    <label for="name" class="block text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400" data-i18n="contact.form_name">Nom Complet</label>
+                                    <input type="text" id="name" name="name" required placeholder="Ex: Slimane Amrani" data-i18n-ph="contact.form_name_ph" class="w-full px-4 py-3 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700/80 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-primary-500 dark:focus:ring-primary-400 transition-all">
                                 </div>
                                 <!-- Company -->
                                 <div class="space-y-2">
-                                    <label for="company" class="block text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">Entreprise / Organisme</label>
-                                    <input type="text" id="company" name="company" placeholder="Ex: OPGI, Sonatrach, CACI..." class="w-full px-4 py-3 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700/80 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-primary-500 dark:focus:ring-primary-400 transition-all">
+                                    <label for="company" class="block text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400" data-i18n="contact.form_company">Entreprise / Organisme</label>
+                                    <input type="text" id="company" name="company" placeholder="Ex: OPGI, Sonatrach, CACI..." data-i18n-ph="contact.form_company_ph" class="w-full px-4 py-3 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700/80 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-primary-500 dark:focus:ring-primary-400 transition-all">
                                 </div>
                             </div>
 
                             <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
                                 <!-- Email -->
                                 <div class="space-y-2">
-                                    <label for="email" class="block text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">Adresse Électronique</label>
-                                    <input type="email" id="email" name="_replyto" required placeholder="Ex: contact@entreprise.dz" class="w-full px-4 py-3 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700/80 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-primary-500 dark:focus:ring-primary-400 transition-all">
+                                    <label for="email" class="block text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400" data-i18n="contact.form_email">Adresse Électronique</label>
+                                    <input type="email" id="email" name="_replyto" required placeholder="Ex: contact@entreprise.dz" data-i18n-ph="contact.form_email_ph" class="w-full px-4 py-3 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700/80 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-primary-500 dark:focus:ring-primary-400 transition-all">
                                 </div>
                                 <!-- Phone -->
                                 <div class="space-y-2">
-                                    <label for="phone" class="block text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">Numéro de Téléphone</label>
-                                    <input type="tel" id="phone" name="phone" placeholder="Ex: 05 50 12 34 56" class="w-full px-4 py-3 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700/80 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-primary-500 dark:focus:ring-primary-400 transition-all">
+                                    <label for="phone" class="block text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400" data-i18n="contact.form_phone">Numéro de Téléphone</label>
+                                    <input type="tel" id="phone" name="phone" placeholder="Ex: 05 50 12 34 56" data-i18n-ph="contact.form_phone_ph" class="w-full px-4 py-3 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700/80 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-primary-500 dark:focus:ring-primary-400 transition-all">
                                 </div>
                             </div>
 
                             <!-- Subject / Needs -->
                             <div class="space-y-2">
-                                <label for="subject" class="block text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">Objet de votre demande</label>
+                                <label for="subject" class="block text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400" data-i18n="contact.form_subject">Objet de votre demande</label>
                                 <select id="subject" name="subject" class="w-full px-4 py-3 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700/80 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-primary-500 dark:focus:ring-primary-400 transition-all text-slate-600 dark:text-slate-400">
-                                    <option value="formation">Demande de formation d'équipe</option>
-                                    <option value="conformite">Mise en conformité Loi 18-07</option>
-                                    <option value="consulting">Mission de conseil ou d'Audit IT</option>
-                                    <option value="universitaire">Collaboration Universitaire / Académique</option>
-                                    <option value="autre">Autre demande professionnelle</option>
+                                    <option value="formation" data-i18n="contact.form_opt1">Demande de formation d'équipe</option>
+                                    <option value="conformite" data-i18n="contact.form_opt2">Mise en conformité Loi 18-07</option>
+                                    <option value="consulting" data-i18n="contact.form_opt3">Mission de conseil ou d'Audit IT</option>
+                                    <option value="universitaire" data-i18n="contact.form_opt4">Collaboration Universitaire / Académique</option>
+                                    <option value="autre" data-i18n="contact.form_opt5">Autre demande professionnelle</option>
                                 </select>
                             </div>
 
                             <!-- Message -->
                             <div class="space-y-2">
-                                <label for="message" class="block text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">Détails de votre besoin</label>
-                                <textarea id="message" name="message" rows="5" required placeholder="Veuillez décrire brièvement les thématiques à couvrir, le public cible (ingénieurs, cadres), le nombre de personnes et la période souhaitée..." class="w-full px-4 py-3 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700/80 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-primary-500 dark:focus:ring-primary-400 transition-all"></textarea>
+                                <label for="message" class="block text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400" data-i18n="contact.form_details">Détails de votre besoin</label>
+                                <textarea id="message" name="message" rows="5" required placeholder="Veuillez décrire brièvement les thématiques à couvrir, le public cible (ingénieurs, cadres), le nombre de personnes et la période souhaitée..." data-i18n-ph="contact.form_details_ph" class="w-full px-4 py-3 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700/80 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-primary-500 dark:focus:ring-primary-400 transition-all"></textarea>
                             </div>
 
-                            <button type="submit" class="w-full py-4 bg-primary-600 hover:bg-primary-700 dark:bg-primary-500 dark:hover:bg-primary-600 text-white font-bold text-sm rounded-xl shadow-lg transition-colors">
+                            <button type="submit" class="w-full py-4 bg-primary-600 hover:bg-primary-700 dark:bg-primary-500 dark:hover:bg-primary-600 text-white font-bold text-sm rounded-xl shadow-lg transition-colors" data-i18n="contact.form_submit">
                                 Envoyer le message
                             </button>
                         </form>
@@ -1396,25 +1549,25 @@
                 <!-- Branding -->
                 <div class="flex flex-col items-center md:items-start text-center md:text-left">
                     <p class="text-white font-bold font-serif text-lg tracking-wide">BOUAFIA REHABI</p>
-                    <p class="text-xs text-slate-500 mt-1">Formateur IT & Expert Consultant Informatique Agréé</p>
+                    <p class="text-xs text-slate-500 mt-1" data-i18n="footer.title">Formateur IT & Expert Consultant Informatique Agréé</p>
                 </div>
 
                 <!-- Footer Navigation links -->
                 <div class="flex flex-wrap justify-center gap-6 text-xs font-semibold">
-                    <a href="#about" class="hover:text-white transition-colors">Profil</a>
-                    <a href="#skills" class="hover:text-white transition-colors">Compétences</a>
-                    <a href="#experiences" class="hover:text-white transition-colors">Formations</a>
-                    <a href="#education" class="hover:text-white transition-colors">Parcours</a>
-                    <a href="#contact" class="hover:text-white transition-colors">Contact</a>
+                    <a href="#about" class="hover:text-white transition-colors" data-i18n="footer.profil">Profil</a>
+                    <a href="#skills" class="hover:text-white transition-colors" data-i18n="footer.competences">Compétences</a>
+                    <a href="#experiences" class="hover:text-white transition-colors" data-i18n="footer.formations">Formations</a>
+                    <a href="#education" class="hover:text-white transition-colors" data-i18n="footer.parcours">Parcours</a>
+                    <a href="#contact" class="hover:text-white transition-colors" data-i18n="footer.contact">Contact</a>
                     <a href="assets/cv_bouafia-MAJ.pdf" download class="text-primary-400 hover:text-white transition-colors flex items-center gap-1">
-                        <i class="fa-solid fa-download"></i> Télécharger CV
+                        <i class="fa-solid fa-download"></i> <span data-i18n="footer.download">Télécharger CV</span>
                     </a>
                 </div>
 
                 <!-- Back to top -->
                 <div class="text-xs text-slate-500 text-center md:text-right">
-                    <p>&copy; 2026 Bouafia Rehabi. Tous droits réservés.</p>
-                    <p class="mt-1">Propulsé par <a href="https://vercel.com" target="_blank" class="text-primary-500 hover:underline">Vercel</a></p>
+                    <p data-i18n="footer.copyright">&copy; 2026 Bouafia Rehabi. Tous droits réservés.</p>
+                    <p class="mt-1"><span data-i18n="footer.powered">Propulsé par</span> <a href="https://vercel.com" target="_blank" class="text-primary-500 hover:underline">Vercel</a></p>
                 </div>
             </div>
         </div>
@@ -1440,6 +1593,12 @@
             reveals.forEach(reveal => {
                 observer.observe(reveal);
             });
+
+            // Apply saved language on load
+            const savedLang = localStorage.getItem('siteLang') || 'fr';
+            if (savedLang !== 'fr') {
+                applyTranslations(savedLang);
+            }
         });
     </script>
 
@@ -1471,9 +1630,9 @@
             <div class="bg-gradient-to-r from-emerald-600 to-emerald-700 px-6 py-6 text-white flex items-center justify-between">
                 <div>
                     <h3 class="text-lg font-bold flex items-center">
-                        <i class="fa-solid fa-certificate mr-2"></i>Attestations Officielles
+                        <i class="fa-solid fa-certificate mr-2"></i><span data-i18n="attest.modal_title">Attestations Officielles</span>
                     </h3>
-                    <p class="text-emerald-50 text-xs mt-0.5 opacity-90">Documents & Certificats de bonne exécution</p>
+                    <p class="text-emerald-50 text-xs mt-0.5 opacity-90" data-i18n="attest.modal_sub">Documents & Certificats de bonne exécution</p>
                 </div>
                 <button @click="attestModal = false" class="w-8 h-8 flex items-center justify-center rounded-full bg-white/10 hover:bg-white/20 transition-colors">
                     <i class="fa-solid fa-xmark"></i>
@@ -1506,7 +1665,7 @@
                         <div class="flex-1 min-w-0">
                             <p class="font-semibold text-slate-800 dark:text-slate-100 text-sm truncate" x-text="item.label"></p>
                             <p class="text-[11px] text-slate-400 dark:text-slate-400 mt-0.5 flex items-center gap-1">
-                                <i class="fa-solid fa-file-pdf text-red-500/80"></i> Document officiel PDF
+                                <i class="fa-solid fa-file-pdf text-red-500/80"></i> <span data-i18n="attest.doc_badge">Document officiel PDF</span>
                             </p>
                         </div>
                         <span class="w-8 h-8 rounded-lg bg-white dark:bg-slate-800 group-hover:bg-emerald-600 group-hover:text-white text-slate-400 dark:text-slate-400 flex items-center justify-center transition-colors shadow-xs flex-shrink-0">
@@ -1520,7 +1679,7 @@
             <div class="px-6 py-4 border-t border-slate-100 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/50">
                 <p class="text-xs text-center text-slate-400 dark:text-slate-500">
                     <i class="fa-solid fa-shield-halved text-emerald-500 mr-1"></i>
-                    Documents officiels &mdash; Cliquer sur un document pour le télécharger
+                    <span data-i18n="attest.modal_footer">Documents officiels &mdash; Cliquer sur un document pour le télécharger</span>
                 </p>
             </div>
         </div>
@@ -1534,7 +1693,7 @@
        rel="noopener noreferrer"
        aria-label="Contacter Bouafia Rehabi sur WhatsApp">
         <!-- Tooltip -->
-        <span class="whatsapp-label">💬 Discuter sur WhatsApp</span>
+        <span class="whatsapp-label" data-i18n="whatsapp.label">💬 Discuter sur WhatsApp</span>
         <!-- Icon Circle -->
         <div class="whatsapp-icon-wrap">
             <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
