@@ -1061,7 +1061,7 @@
                                 </div>
                                 <h4 class="font-bold text-base text-slate-900 dark:text-white" x-text="exp.module"></h4>
                                 <div class="text-xs text-slate-600 dark:text-slate-400">
-                                    <span class="font-bold text-slate-700 dark:text-slate-300" data-i18n="exp.mobile_label">Établissement: </span> <span x-text="exp.etablissement"></span>
+                                    <span class="font-bold text-slate-700 dark:text-slate-300" x-text="lang === 'ar' ? 'المؤسسة: ' : lang === 'en' ? 'Institution: ' : 'Établissement: '"></span> <span x-text="exp.etablissement"></span>
                                 </div>
                                 <div class="bg-slate-50 dark:bg-slate-900/60 p-3 rounded-xl space-y-1">
                                     <p class="text-xs font-bold text-slate-800 dark:text-slate-200 flex items-center gap-1">
@@ -1074,8 +1074,7 @@
                         </div>
                     </template>
                     <template x-if="filteredExperiences.length === 0">
-                        <div class="bg-white dark:bg-slate-800 p-12 rounded-2xl border border-slate-100 dark:border-slate-800 text-center text-slate-500 col-span-2" data-i18n="exp.empty_mobile">
-                            Aucun résultat trouvé.
+                        <div class="bg-white dark:bg-slate-800 p-12 rounded-2xl border border-slate-100 dark:border-slate-800 text-center text-slate-500 col-span-2" x-text="lang === 'ar' ? 'لم يتم العثور على نتائج.' : lang === 'en' ? 'No results found.' : 'Aucun résultat trouvé.'">
                         </div>
                     </template>
                 </div>
@@ -1589,13 +1588,18 @@
                     }
                 });
             }, {
-                threshold: 0.05,
-                rootMargin: '0px 0px -50px 0px'
+                threshold: 0.01,
+                rootMargin: '0px 0px 100px 0px'
             });
             
             reveals.forEach(reveal => {
                 observer.observe(reveal);
             });
+
+            // Mobile reveal fallback: ensure content is visible on phone viewports even if scroll events miss observer
+            setTimeout(() => {
+                reveals.forEach(el => el.classList.add('active'));
+            }, 500);
 
             // Apply saved language on load
             const savedLang = localStorage.getItem('siteLang') || 'fr';
@@ -1668,7 +1672,7 @@
                         <div class="flex-1 min-w-0">
                             <p class="font-semibold text-slate-800 dark:text-slate-100 text-sm truncate" x-text="item.label"></p>
                             <p class="text-[11px] text-slate-400 dark:text-slate-400 mt-0.5 flex items-center gap-1">
-                                <i class="fa-solid fa-file-pdf text-red-500/80"></i> <span data-i18n="attest.doc_badge">Document officiel PDF</span>
+                                <i class="fa-solid fa-file-pdf text-red-500/80"></i> <span x-text="lang === 'ar' ? 'وثيقة رسمية PDF' : lang === 'en' ? 'Official PDF Document' : 'Document officiel PDF'"></span>
                             </p>
                         </div>
                         <span class="w-8 h-8 rounded-lg bg-white dark:bg-slate-800 group-hover:bg-emerald-600 group-hover:text-white text-slate-400 dark:text-slate-400 flex items-center justify-center transition-colors shadow-xs flex-shrink-0">
